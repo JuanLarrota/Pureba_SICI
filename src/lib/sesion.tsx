@@ -7,6 +7,7 @@ import type { User } from "@supabase/supabase-js";
 import { sb } from "@/lib/supabase/cliente";
 import { mal, pedir, type Aviso } from "@/lib/pedir";
 import { clave } from "@/lib/rutas";
+import { comoRol } from "@/lib/dominio/vistaComo";
 
 /** Mi ficha y lo que puedo hacer, tal como lo devuelve la función mi_sesion de la base. */
 export interface Yo {
@@ -38,10 +39,14 @@ interface Sesion {
   ir: (ruta: string, aviso?: Aviso) => void;
   recargar: () => void;
   recargarSesion: () => Promise<void>;
+  puedeVerComo: boolean;        // es socio: puede mirar el sistema con el papel de otro
+  vistaActiva: string | null;   // el papel con el que está mirando, o null si ve lo suyo
+  verComo: (rol: string | null) => void;
 }
 
 const Contexto = createContext<Sesion | null>(null);
 const CUALQUIERA = "*";
+const LLAVE_VISTA = "sici_ver_como";
 
 export function SesionProvider({ children }: { children: ReactNode }) {
   const router = useRouter();
@@ -49,7 +54,8 @@ export function SesionProvider({ children }: { children: ReactNode }) {
   const search = useSearchParams();
   const actual = clave(pathname + (search.toString() ? `?${search}` : ""));
   const [usuario, setUsuario] = useState<User | null>(null);
-  const [yo, setYo] = useState<Yo | null>(null);
+  const [yoReal, setYo] = useState<Yo | null>(null);
+  const [vista, setVista] = useState<string | null>(null);
   const [listo, setListo] = useState(false);
   const [recuperando, setRecuperando] = useState(false);
   const [version, setVersion] = useState(0);
@@ -96,9 +102,23 @@ export function SesionProvider({ children }: { children: ReactNode }) {
   }, [router, actual]);
   const recargarSesion = useCallback(() => cargarYo(usuario), [cargarYo, usuario]);
 
+  // «Ver como»: solo un socio de verdad puede mirar el sistema con el papel de otro.
+  // La elección se recuerda mientras dure la pestaña.
+  useEffect(() => {
+    const t = setTimeout(() => { try { setVista(sessionStorage.getItem(LLAVE_VISTA)); } catch { /* sin almacenamiento */ } }, 0);
+    return () => clearTimeout(t);
+  }, []);
+  const verComo = useCallback((rol: string | null) => {
+    setVista(rol);
+    try { if (rol) sessionStorage.setItem(LLAVE_VISTA, rol); else sessionStorage.removeItem(LLAVE_VISTA); } catch { /* sin almacenamiento */ }
+  }, []);
+  const puedeVerComo = !!yoReal?.es_socio;
+  const vistaActiva = puedeVerComo && vista && vista !== yoReal?.rol ? vista : null;
+  const yo = useMemo(() => (yoReal && vistaActiva ? comoRol(yoReal, vistaActiva) : yoReal), [yoReal, vistaActiva]);
+
   const aviso = avisoEstado && (avisoEstado.para === actual || avisoEstado.para === CUALQUIERA) ? avisoEstado.aviso : null;
-  const valor = useMemo<Sesion>(() => ({ usuario, yo, listo, recuperando, terminarRecuperacion, actual, aviso, version, avisar, ir, recargar, recargarSesion }),
-    [usuario, yo, listo, recuperando, terminarRecuperacion, actual, aviso, version, avisar, ir, recargar, recargarSesion]);
+  const valor = useMemo<Sesion>(() => ({ usuario, yo, listo, recuperando, terminarRecuperacion, actual, aviso, version, avisar, ir, recargar, recargarSesion, puedeVerComo, vistaActiva, verComo }),
+    [usuario, yo, listo, recuperando, terminarRecuperacion, actual, aviso, version, avisar, ir, recargar, recargarSesion, puedeVerComo, vistaActiva, verComo]);
   return <Contexto.Provider value={valor}>{children}</Contexto.Provider>;
 }
 
