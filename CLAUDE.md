@@ -119,7 +119,7 @@ sistema integrado de control interno/       (carpeta local de Felipe; no es el r
     └── package.json, tsconfig.json, next.config.ts, playwright.config.ts, vitest.config.mts, eslint.config.mjs
 ```
 
-**Base de datos:** Supabase, proyecto `khbmraaiprcjocmprzkb`, plan gratuito,
+**Base de datos:** Supabase (proyecto de pruebas; su URL va en `.env.local` o en Vercel), plan gratuito,
 Postgres 17. Se pausa tras una semana sin uso (se reactiva con `restore_project`
 del conector, con permiso de Felipe). Sin copias automáticas en el plan gratuito.
 Las reglas de negocio viven en la base (disparadores, RLS, vistas que escriben

@@ -53,7 +53,7 @@ datos reales hay que traerlos de la Mac de Felipe.
 - `scripts/demo/`: un Supabase de mentira para recorrer las pantallas sin
   sesión (`armar.py`).
 
-## Producción (Supabase `khbmraaiprcjocmprzkb`)
+## Producción (Supabase de ESA; no se referencia en este repositorio)
 
 - Plan gratuito: se pausa tras 7 días sin uso y no tiene copias automáticas.
 - Asesor de seguridad: solo el aviso de contraseñas filtradas (lo activa Felipe).
