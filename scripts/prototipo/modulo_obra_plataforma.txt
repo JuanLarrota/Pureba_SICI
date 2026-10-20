@@ -1,0 +1,146 @@
+===CSS===
+/* ---------- módulo de obra: tablero de todas y ficha de cada una ---------- */
+.ob-meses{display:flex;gap:6px;align-items:flex-end;height:150px;border-bottom:1px solid var(--tinta);margin:22px 0 6px;}
+.ob-mes{flex:1;min-width:0;background:var(--tinta);}
+.ob-meses-l{display:flex;gap:6px;font-family:var(--ui);font-size:8.5px;color:var(--taupe);letter-spacing:.08em;text-transform:uppercase;font-weight:500;}
+.ob-meses-l span{flex:1;min-width:0;text-align:center;}
+.ob-doc{display:grid;grid-template-columns:1fr auto;gap:4px 22px;align-items:baseline;padding:15px 0;border-bottom:1px solid var(--linea-2);}
+.ob-doc b{font-family:var(--ui);font-weight:500;font-size:.95rem;}
+.ob-doc span{grid-column:1;color:var(--tinta-3);font-size:.84rem;}
+.ob-doc .chip{grid-column:2;grid-row:1;}
+.ob-sub{margin:-8px 0 30px;}
+.ob-falta{display:flex;gap:6px;flex-wrap:wrap;}
+.ob-aviso{background:var(--tinta);color:var(--papel);padding:12px 14px;font-size:.84rem;margin:18px 0 0;max-width:64ch;}
+===HTML===
+  <section class="view" id="v-obra">
+    <h1 id="ob-titulo">Obra</h1>
+    <p class="sub" id="ob-sub"></p>
+    <div class="pill-row" id="ob-obras"></div>
+    <div id="ob"></div>
+    <div id="ob-nirvana" hidden>
+<!--NIRVANA-->
+    </div>
+    <div class="foot lbl" id="ob-pie"></div>
+  </section>
+
+===JS===
+(function(){
+  var D = /*DATOS*/;
+  var SECC = [["resumen","Resumen"],["gastos","Gastos y facturas"],["caja","Flujo de caja"],["docs","Documentos"]];
+  var CARPETAS = [
+    ["Contrato y pólizas","El contrato firmado, sus otrosíes y las pólizas con su vencimiento","poliza"],
+    ["Planos vigentes","La última versión entregada de cada plano; viene del módulo de diseño","entregable"],
+    ["Presupuesto y APU","El presupuesto aprobado y sus análisis de precios","presupuesto"],
+    ["Facturas y soportes","La foto de cada factura o remisión, atada a su gasto","factura"],
+    ["Actas de cobro y de pago","Lo que se le cobra al cliente y lo que se le paga a cada contratista","acta"],
+    ["Bitácora y fotos","El registro diario de la obra, con ubicación y hora","foto"],
+    ["Cambios y adicionales","Cada cambio decidido en obra y la aprobación del cliente","adicional"],
+    ["Licencias y permisos","Licencia de construcción, permisos y certificados","otro"]];
+  var MES = ["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"];
+  var MESL = ["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"];
+  var st = {o:null, s:"resumen", nota:null};
+  function h(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
+  function pesos(v){return "$"+Math.round(v).toString().replace(/\B(?=(\d{3})+(?!\d))/g,".");}
+  function millones(v){return v>=1e6?"$"+(v/1e6).toFixed(1).replace(".",",")+" M":pesos(v);}
+  function nombre(c){return c.replace(/^OBRA\s+/,"").toLowerCase().replace(/(^|\s)(\S)/g,function(m,a,b){return a+b.toUpperCase();});}
+  function dia(iso){var p=String(iso).split("-");return (+p[2])+" de "+MESL[p[1]-1];}
+  function frase(s){s=String(s||"").toLowerCase().replace(/^nomina$/,"nómina");return s.charAt(0).toUpperCase()+s.slice(1);}
+  function persona(s){return String(s||"").toLowerCase().replace(/(^|\s)(\S)/g,function(m,a,b){return a+b.toUpperCase();});}
+  function falta(o){
+    var f=[];
+    if(!o.contrato) f.push("Sin contrato");
+    if(!o.cobros.n) f.push("Sin cobros");
+    if(!o.documentos) f.push("Sin documentos");
+    if(!o.bitacoras) f.push("Sin bitácora");
+    return f;
+  }
+  function obra(){return D.obras.filter(function(x){return x.codigo===st.o;})[0];}
+
+  function todas(){
+    var total=D.obras.reduce(function(a,o){return a+o.pagado_anio;},0), mayor=D.obras[0];
+    var sinc=D.obras.filter(function(o){return !o.contrato;}).length;
+    var out='<div class="hero"><div class="hero-k lbl">Pagado este año en obras en construcción</div><div class="hero-v">'+pesos(total)+'</div><div class="hero-s">en '+D.obras.length+" obras con pagos en los últimos tres meses. <strong>"+Math.round(mayor.pagado_anio/total*100)+"% es "+h(nombre(mayor.codigo))+".</strong> "+(sinc?"De "+sinc+" no hay contrato cargado: se sabe cuánto se ha pagado, no contra qué compararlo.":"")+"</div></div>";
+    out+='<h2>Todas las obras</h2><div class="tw"><table><thead><tr><th>Obra</th><th class="r">Contrato</th><th class="r">Pagado</th><th>Último pago</th><th>Lo que más pesa</th><th>Lo que falta cargar</th></tr></thead><tbody>'+
+      D.obras.map(function(o){var c=o.categorias[0];
+        return '<tr class="click" data-obra="'+h(o.codigo)+'"><td class="name">'+h(nombre(o.codigo))+'</td><td class="r">'+(o.contrato?pesos(o.contrato):"—")+'</td><td class="r">'+pesos(o.pagado)+'<div class="bar"><span style="width:'+Math.max(2,Math.round(o.pagado/mayor.pagado*100))+'%"></span></div></td><td>'+h(dia(o.ultimo_pago))+" · "+o.pagos+" pagos</td><td>"+h(frase(c.nombre))+" · "+Math.round(c.valor/o.pagado*100)+'%</td><td><div class="ob-falta">'+falta(o).map(function(f){return '<span class="chip a">'+h(f)+"</span>";}).join("")+"</div></td></tr>";}).join("")+"</tbody></table></div>";
+    out+='<h2>Lo que este tablero todavía no puede decir</h2><div class="alerts">'+
+      '<div class="alert"><span class="atag c">Falta</span><span class="atxt"><b>Contrato y presupuesto de "+sinc+" obras.</b> Sin ellos no hay desviación ni margen: solo el total pagado.</span><span class="awho">Dirección</span></div>'+
+      '<div class="alert"><span class="atag c">Falta</span><span class="atxt"><b>Los cobros.</b> El libro que se cargó es el de pagos. Sin las actas de cobro no hay flujo de caja neto por obra.</span><span class="awho">Financiero</span></div>'+
+      '<div class="alert"><span class="atag a">Falta</span><span class="atxt"><b>Los soportes.</b> Ningún pago histórico tiene su factura adjunta. Desde la aplicación, cada gasto nace con la foto.</span><span class="awho">Residentes</span></div>'+
+      '<div class="alert"><span class="atag a">Falta</span><span class="atxt"><b>La carpeta de Drive de cada obra.</b> La base aún no guarda ese enlace ni el índice de documentos.</span><span class="awho">Por construir</span></div></div>';
+    return out;
+  }
+  function resumen(o){
+    if(o.codigo==="OBRA NIRVANA") return "";
+    var c=o.categorias[0];
+    return '<div class="hero"><div class="hero-k lbl">Pagado a la fecha</div><div class="hero-v">'+pesos(o.pagado)+'</div><div class="hero-s">en '+o.pagos+" pagos, del "+h(dia(o.primer_pago))+" al "+h(dia(o.ultimo_pago))+". <strong>No tiene contrato ni presupuesto cargados:</strong> se ve lo que se ha pagado, no contra qué compararlo.</div></div>"+
+      '<div class="grid"><div class="cell"><span class="cell-k lbl">Lo que más pesa</span><div class="cell-v">'+Math.round(c.valor/o.pagado*100)+'%</div><div class="cell-n">'+h(frase(c.nombre))+" · "+pesos(c.valor)+'</div></div>'+
+      '<div class="cell"><span class="cell-k lbl">A quién más se le ha pagado</span><div class="cell-v">'+millones(o.terceros[0].valor)+'</div><div class="cell-n">'+h(persona(o.terceros[0].nombre))+" · "+o.terceros[0].pagos+' pagos</div></div>'+
+      '<div class="cell warn"><span class="cell-k lbl">Cobrado al cliente</span><div class="cell-v">—</div><div class="cell-n">sin actas de cobro cargadas</div></div>'+
+      '<div class="cell warn"><span class="cell-k lbl">Documentos</span><div class="cell-v">'+o.documentos+'</div><div class="cell-n">ninguno asociado todavía</div></div></div>';
+  }
+  function gastos(o){
+    var sin=o.ultimos.filter(function(u){return !u.con_soporte;}).length;
+    return '<h2 style="margin-top:0">Por centro de costo</h2><div class="tw"><table><thead><tr><th>Centro de costo</th><th class="r">Pagado</th><th class="r">Pagos</th><th>Parte del total</th></tr></thead><tbody>'+
+      o.categorias.map(function(c){return '<tr><td class="name">'+h(frase(c.nombre))+'</td><td class="r">'+pesos(c.valor)+'</td><td class="r">'+c.pagos+'</td><td><div class="bar"><span style="width:'+Math.max(1,Math.round(c.valor/o.pagado*100))+'%"></span></div></td></tr>';}).join("")+"</tbody></table></div>"+
+      '<h2>A quién se le ha pagado más</h2><div class="tw"><table><thead><tr><th>Tercero</th><th class="r">Pagado</th><th class="r">Pagos</th></tr></thead><tbody>'+
+      o.terceros.map(function(t){return '<tr><td class="name">'+h(persona(t.nombre))+'</td><td class="r">'+pesos(t.valor)+'</td><td class="r">'+t.pagos+"</td></tr>";}).join("")+"</tbody></table></div>"+
+      '<h2>Últimos pagos y su soporte</h2><div class="tw"><table><thead><tr><th>Fecha</th><th>Tercero</th><th>Concepto</th><th class="r">Valor</th><th>Factura o soporte</th></tr></thead><tbody>'+
+      o.ultimos.map(function(u){return "<tr><td>"+h(dia(u.fecha))+'</td><td class="name">'+h(persona(u.tercero))+"</td><td>"+h(frase(u.concepto))+'</td><td class="r">'+pesos(u.valor)+"</td><td>"+(u.con_soporte?'<span class="chip o">Adjunto</span>':'<span class="chip a">Sin soporte</span>')+"</td></tr>";}).join("")+"</tbody></table></div>"+
+      '<p style="margin-top:18px;">'+(sin?"Ninguno de estos pagos tiene su factura adjunta: vienen del libro de pagos, que registra el pago y no el documento. ":"")+"Desde la aplicación el gasto se registra con la foto del soporte, y sobre $2.000.000 no sale sin aprobación.</p>";
+  }
+  function caja(o){
+    var max=Math.max.apply(null,o.meses.map(function(m){return m.egresos;}));
+    var pico=o.meses.filter(function(m){return m.egresos===max;})[0];
+    return '<div class="hero"><div class="hero-k lbl">El mes que más salió</div><div class="hero-v">'+pesos(max)+'</div><div class="hero-s">en '+MESL[+pico.mes.slice(5)-1]+". <strong>Esto es solo lo que salió.</strong> Los cobros al cliente no están cargados, así que todavía no se puede decir si la obra se financia sola o la financia ESA.</div></div>"+
+      '<div class="ob-meses">'+o.meses.map(function(m){return '<div class="ob-mes" style="height:'+Math.max(3,Math.round(m.egresos/max*100))+'%" title="'+pesos(m.egresos)+'"></div>';}).join("")+'</div><div class="ob-meses-l">'+o.meses.map(function(m){return "<span>"+MES[+m.mes.slice(5)-1]+"</span>";}).join("")+"</div>"+
+      '<h2>Mes a mes</h2><div class="tw"><table><thead><tr><th>Mes</th><th class="r">Salió</th><th class="r">Pagos</th><th class="r">Entró</th><th class="r">Neto</th></tr></thead><tbody>'+
+      o.meses.map(function(m){return '<tr><td class="name">'+frase(MESL[+m.mes.slice(5)-1])+" "+m.mes.slice(0,4)+'</td><td class="r">'+pesos(m.egresos)+'</td><td class="r">'+m.pagos+'</td><td class="r">—</td><td class="r">—</td></tr>';}).join("")+
+      '<tr class="rec"><td class="name">Total</td><td class="r">'+pesos(o.pagado)+'</td><td class="r">'+o.pagos+'</td><td class="r">—</td><td class="r">—</td></tr></tbody></table></div>'+
+      '<p style="margin-top:18px;">Hacia adelante, el flujo sale solo: cada compromiso registrado en obra trae su fecha prevista de pago y cada acta de cobro la suya. Con eso se arma la proyección a 13 semanas del módulo de caja, obra por obra.</p>';
+  }
+  function docs(o){
+    return '<div class="hero"><div class="hero-k lbl">Documentos asociados a esta obra</div><div class="hero-v">'+o.documentos+'</div><div class="hero-s">Así quedaría el expediente de la obra: cada carpeta enlazada a su carpeta de Drive, y cada documento atado a lo que soporta. <strong>Hoy no hay ninguno cargado.</strong></div></div>'+
+      '<div style="border-top:1px solid var(--tinta)">'+CARPETAS.map(function(c){return '<div class="ob-doc"><b>'+h(c[0])+'</b><span class="chip n">0 documentos</span><span>'+h(c[1])+"</span></div>";}).join("")+"</div>"+
+      '<div class="said-a" style="margin-top:22px"><button class="btn" style="width:auto;padding:13px 22px" data-nota="En la aplicación, este botón abre la carpeta de Drive de la obra. La base todavía no guarda ese enlace.">Abrir la carpeta en Drive</button></div>'+
+      (st.nota?'<div class="ob-aviso" role="status">'+h(st.nota)+"</div>":"")+
+      '<h2>Qué guarda hoy la base y qué le falta</h2><div class="alerts">'+
+      '<div class="alert"><span class="atag o">Ya está</span><span class="atxt"><b>El soporte atado a su origen.</b> Foto, factura, remisión, acta, póliza o informe, pegado a un gasto, una bitácora, un cambio o un adicional. No se puede editar ni borrar.</span><span class="awho">Base</span></div>'+
+      '<div class="alert"><span class="atag o">Ya está</span><span class="atxt"><b>Los planos entregados</b>, con versión y enlace de Drive, desde el módulo de diseño.</span><span class="awho">Base</span></div>'+
+      '<div class="alert"><span class="atag c">Falta</span><span class="atxt"><b>La carpeta de Drive de cada obra</b> y el índice de documentos que no nacen de un gasto: contrato, pólizas, licencias.</span><span class="awho">Por construir</span></div>'+
+      '<div class="alert"><span class="atag c">Falta</span><span class="atxt"><b>El número de la factura</b> como dato del gasto, para cruzarlo con contabilidad.</span><span class="awho">Por construir</span></div></div>';
+  }
+  function pinta(){
+    var o=st.o?obra():null;
+    document.getElementById("ob-titulo").textContent=o?nombre(o.codigo):"Obra";
+    document.getElementById("ob-sub").textContent=o
+      ? (o.contrato?"Contrato firmado por "+pesos(o.contrato)+" · Administración 10% · Utilidad 4% · Imprevistos 0% · Residente: Andrés Mesías"
+                   :o.pagos+" pagos registrados entre el "+dia(o.primer_pago)+" y el "+dia(o.ultimo_pago)+" de 2026. Sin contrato cargado.")
+      : "Todo lo de cada obra en un solo lugar: plata, facturas, flujo de caja, documentos y el registro en sitio. Aquí, el resumen de todas; en el menú, cada espacio.";
+    var obras=document.getElementById("ob-obras");
+    obras.hidden=!o;
+    obras.innerHTML=D.obras.map(function(x){return '<button class="pill" aria-pressed="'+(x.codigo===st.o)+'" data-obra="'+h(x.codigo)+'">'+h(nombre(x.codigo))+"</button>";}).join("");
+    document.getElementById("ob").innerHTML=!o?todas():st.s==="resumen"?resumen(o):st.s==="gastos"?gastos(o):st.s==="caja"?caja(o):docs(o);
+    document.getElementById("ob-nirvana").hidden=!(o&&o.codigo==="OBRA NIRVANA"&&st.s==="resumen");
+    document.getElementById("ob-pie").textContent="Pagos: libro mayor de ESA, con corte al "+dia(D.corte)+" de 2026"+(o&&o.codigo==="OBRA NIRVANA"&&st.s==="resumen"?" · Balance del 27 de agosto de 2026":"");
+  }
+  document.getElementById("v-obra").addEventListener("click",function(e){
+    var b=e.target.closest("[data-obra],[data-sec],[data-nota]");
+    if(!b) return;
+    st.nota=null;
+    if(b.hasAttribute("data-obra")){
+      st.o=b.getAttribute("data-obra");
+      if(b.tagName==="TR"){st.s="resumen";if(window.sici.marca) window.sici.marca("obra","resumen");window.scrollTo(0,0);}
+    }
+    else {st.nota=b.dataset.nota;}
+    pinta();
+  });
+  /* Los espacios del módulo se escogen en el menú lateral; la obra, aquí adentro. */
+  window.sici=window.sici||{};
+  window.sici.obra=function(s){
+    if(s==="tablero"){st.o=null;st.s="resumen";}
+    else{st.s=s;if(!st.o) st.o=D.obras[0].codigo;}
+    st.nota=null;pinta();
+  };
+  pinta();
+})();

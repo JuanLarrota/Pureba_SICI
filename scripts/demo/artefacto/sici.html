@@ -1,0 +1,57 @@
+<title>SICI · ESA Arquitectura</title>
+<link rel="icon" href="icono-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600&family=Work+Sans:wght@400;500&display=swap">
+<link rel="stylesheet" href="estilos.css">
+<style>
+/* Los colores de la aplicación (estilos.css) siguen al sistema; aquí también al
+   tema que escoja quien la mira. */
+:root[data-theme="dark"]{
+  --tinta:#F5F3F0; --tinta-3:#A8A29A; --taupe:#8F8B82; --papel:#0E0E0D; --hueso:#171614; --linea:#2C2A27; --linea-2:#211F1D;
+  --critico:#D9866F; --critico-f:#2A1A16; --alerta:#C8A257; --alerta-f:#26200F; --ok:#84AE8E; --ok-f:#18241A; color-scheme:dark}
+@media (prefers-color-scheme:dark){:root[data-theme="light"]{
+  --tinta:#000; --tinta-3:#3F3E3E; --taupe:#807D74; --papel:#FFF; --hueso:#F1EEEB; --linea:#E2DED8; --linea-2:#EFECE8;
+  --critico:#8C3A2B; --critico-f:#F0E3DF; --alerta:#8A6A22; --alerta-f:#F2ECDD; --ok:#4A6B52; --ok-f:#E5EBE5; color-scheme:light}}
+body{background:var(--papel);color:var(--tinta)}
+
+.demo{background:var(--hueso);border-bottom:1px solid var(--linea)}
+.demo-in{max-width:600px;margin:0 auto;padding:10px 20px 12px;display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px}
+.demo p{margin:0;font:500 .62rem var(--ui);letter-spacing:.2em;text-transform:uppercase;color:var(--taupe);flex:1 1 100%}
+.demo-ver{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font:400 .86rem var(--texto);color:var(--tinta-3)}
+.demo-ver button{font:500 .82rem var(--ui);letter-spacing:.02em;background:none;color:var(--tinta);border:1px solid var(--linea);
+  padding:6px 10px;min-height:36px;cursor:pointer}
+.demo-ver button[aria-pressed="true"]{background:var(--tinta);color:var(--papel);border-color:var(--tinta)}
+.demo-ver button:focus-visible{outline:2px solid var(--tinta);outline-offset:2px}
+</style>
+
+<div class="demo" role="note">
+  <div class="demo-in">
+    <p>Demostración · datos de ejemplo · no guarda nada</p>
+    <div class="demo-ver" id="demo-ver">
+      <span>Ver como</span>
+      <button type="button" id="ver-luisa" data-como="luisa">Luisa · dirige</button>
+      <button type="button" id="ver-mariana" data-como="mariana">Mariana · produce</button>
+      <button type="button" id="ver-allison" data-como="allison">Allison · vende</button>
+    </div>
+  </div>
+</div>
+<div id="app"><p class="espera">Abriendo…</p></div>
+<noscript>Esta aplicación necesita JavaScript.</noscript>
+
+<script>
+(function () {
+  var como = "luisa";
+  try { como = localStorage.getItem("sici-demo-como") || "luisa"; } catch (e) {}
+  document.querySelectorAll("#demo-ver button").forEach(function (b) {
+    b.setAttribute("aria-pressed", b.dataset.como === como ? "true" : "false");
+    b.addEventListener("click", function () {
+      try { localStorage.setItem("sici-demo-como", b.dataset.como); } catch (e) {}
+      location.hash = "";
+      location.reload();
+    });
+  });
+})();
+</script>
+<script type="importmap">{"imports":{"https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm":"./supabase_falso.js"}}</script>
+<script type="module" src="app.js"></script>

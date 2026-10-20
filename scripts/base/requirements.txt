@@ -1,0 +1,10 @@
+# Lo que necesitan los scripts de Python del repositorio (pruebas, ETL y herramientas).
+# Versiones fijas: pgserver trae su propio Postgres embebido y una versión nueva
+# podría dejar de imitar la de producción.
+#
+#   python -m venv .venv
+#   .venv/Scripts/pip install -r herramientas/requirements.txt     # Windows
+#   .venv/bin/pip install -r herramientas/requirements.txt         # Mac
+pgserver==0.1.4
+psycopg2-binary==2.9.13
+openpyxl==3.1.5

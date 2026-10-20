@@ -1,0 +1,213 @@
+===CSS===
+/* ---------- módulo de arquitectura y diseño (etapa 2) ---------- */
+.dz-mesa{display:grid;grid-template-columns:minmax(0,340px) minmax(0,1fr);gap:44px;align-items:start;}
+.dz-phone{border:1px solid var(--tinta);background:var(--papel);position:relative;min-height:560px;overflow:hidden;}
+.dz-quien{display:flex;gap:6px;flex-wrap:wrap;padding:14px 18px 0;}
+.dz-quien .pill{padding:5px 11px;font-size:.74rem;}
+.dz-body{padding:6px 18px 26px;}
+.dz-grupo{font-family:var(--ui);font-size:8.5px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--taupe);margin:20px 0 2px;}
+.dz-grupo.c{color:var(--critico);} .dz-grupo.a{color:var(--alerta);}
+.dz-fila{display:block;width:100%;text-align:left;background:none;border:0;border-bottom:1px solid var(--linea-2);padding:13px 0;min-height:44px;color:inherit;font:inherit;cursor:pointer;}
+div.dz-fila{cursor:default;}
+.dz-fila b{display:block;font-family:var(--ui);font-weight:500;font-size:.98rem;letter-spacing:-.005em;}
+.dz-fila span{display:block;color:var(--tinta-3);font-size:.82rem;margin-top:2px;line-height:1.45;}
+.dz-fila em{font-style:normal;color:var(--critico);} .dz-fila i{font-style:normal;color:var(--ok);}
+.dz-marca{display:inline!important;font-family:var(--ui);font-size:8px!important;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--alerta)!important;margin-left:8px;}
+.dz-horas{float:right;display:inline!important;font-family:var(--ui);color:var(--taupe)!important;font-variant-numeric:tabular-nums;}
+.dz-tarjeta{display:block;width:100%;text-align:left;background:none;border:0;border-bottom:1px solid var(--linea-2);padding:17px 0;color:inherit;font:inherit;}
+button.dz-tarjeta{cursor:pointer;}
+.dz-frase{font-family:var(--ui);font-weight:300;font-size:1.22rem;letter-spacing:-.02em;line-height:1.3;margin:0;max-width:none;}
+.dz-globo{background:var(--hueso);padding:13px 15px;margin-top:11px;white-space:pre-line;font-size:.88rem;line-height:1.5;}
+.dz-globo small{display:block;font-family:var(--ui);font-size:8px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--taupe);margin-bottom:5px;}
+.dz-botones{display:flex;gap:8px;margin-top:12px;}
+.dz-botones .btn{padding:13px 8px;font-size:.72rem;}
+.dz-botones .btn.ghost{margin-top:0;}
+.dz-velo{position:absolute;inset:0;background:rgba(0,0,0,.42);display:flex;align-items:flex-end;}
+.dz-cajon{background:var(--papel);border-top:1px solid var(--tinta);padding:20px 18px 22px;width:100%;max-height:84%;overflow:auto;}
+.dz-cajon h3{font-family:var(--ui);font-weight:400;font-size:1.2rem;letter-spacing:-.02em;line-height:1.25;margin:0 0 4px;}
+.dz-cajon p{font-size:.88rem;margin:6px 0 0;}
+.dz-rastro{margin:6px 0 0;padding:0;list-style:none;font-size:.8rem;color:var(--tinta-3);}
+.dz-rastro li{padding:7px 0;border-bottom:1px solid var(--linea-2);} .dz-rastro strong{color:var(--tinta);font-family:var(--ui);font-weight:500;}
+.dz-nota{position:absolute;left:14px;right:14px;bottom:14px;background:var(--tinta);color:var(--papel);padding:12px 14px;font-size:.8rem;line-height:1.45;}
+.dz-reglas{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:13px;max-width:56ch;}
+.dz-reglas li{padding-left:16px;border-left:1px solid var(--tinta);font-size:.92rem;}
+.dz-ej{font-size:.8rem;color:var(--taupe);margin-top:26px;max-width:60ch;}
+@media (max-width:860px){.dz-mesa{grid-template-columns:minmax(0,1fr);gap:30px;}.dz-phone{min-height:480px;max-width:420px;}}
+===HTML===
+  <section class="view" id="v-diseno">
+    <h1>Arquitectura y diseño</h1>
+    <p class="sub">Proyectos, tareas, revisión, dedicación e impacto de cada persona. Dirige Luisa Marín. Cada frase la escribe la base de datos; nadie la redacta.</p>
+    <div id="dz"></div>
+
+    <div id="dz-produccion" hidden>
+      <h2>Proyectos en producción</h2>
+      <div class="tw">
+        <table>
+          <thead><tr><th>Proyecto</th><th>Fase</th><th>Lista de chequeo</th><th class="r">Horas · reales / cotizadas</th><th>Estado</th></tr></thead>
+          <tbody>
+            <tr class="click"><td class="name">Casa GO</td><td>Proyecto final</td><td>14 de 18</td><td class="r">212 / 240</td><td><span class="chip o">En rango</span></td></tr>
+            <tr class="click"><td class="name">Interiorismo Apto Cali</td><td>Anteproyecto</td><td>9 de 11</td><td class="r neg">148 / 120</td><td><span class="chip c">Sobre lo cotizado</span></td></tr>
+            <tr class="click"><td class="name">Casa Cabrera</td><td>Insight</td><td>6 de 7</td><td class="r">38 / 60</td><td><span class="chip o">En rango</span></td></tr>
+            <tr class="click"><td class="name">Edificio Banco Ganadero</td><td>Peritaje</td><td>11 de 16</td><td class="r">96 / 140</td><td><span class="chip a">Avala ingeniero</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div id="dz-dedicacion" hidden>
+      <div class="phones">
+        <div>
+          <div class="phone">
+            <div class="phone-top"><span class="lbl">Tu día</span><span class="lbl">16:30</span></div>
+            <div class="phone-body">
+              <div class="fld"><span class="fld-k">¿Dónde estuviste hoy?</span></div>
+              <div class="fld"><div class="fld-v pick">Mañana · Las Margaritas</div></div>
+              <div class="fld"><div class="fld-v pick">Tarde · Casa GO</div></div>
+              <button class="btn">Listo</button>
+              <button class="btn ghost">Igual que ayer</button>
+            </div>
+          </div>
+          <div class="phone-cap">Sin texto libre · dos toques</div>
+        </div>
+        <div style="flex:1;min-width:280px;">
+          <p><strong>La medición de horas ya falló tres veces</strong>, y siempre por lo mismo: pedir prosa. Un diario produce texto y el texto no se suma, así que alguien tiene que leerlo y clasificarlo, y ese alguien nunca aparece.</p>
+          <p>Aquí no se narra: se asigna. Medio día a un proyecto, los proyectos donde la persona tiene papel como botones, y «igual que ayer» para la mayoría de los días. La fase y las horas las deduce el sistema.</p>
+          <p>De esas horas sale si un proyecto de diseño dejó el margen que se cotizó. Y la compuerta no es un regaño: <strong>una fase no se cierra si a alguien del equipo le faltan días por registrar.</strong> Los festivos no cuentan.</p>
+          <p>A las 4:30 de la tarde, a quien no ha registrado el día le llega un solo mensaje: «¿Dónde estuviste hoy? Son dos toques».</p>
+        </div>
+      </div>
+    </div>
+
+    <p class="dz-ej" id="dz-ej"></p>
+  </section>
+
+===JS===
+(function(){
+  var D = /*DATOS*/;
+  var SECC = [["tablero","Tablero",["Luisa"]],["dia","Mi día",["Mariana","Carlos","Teo"]],["revisar","Revisar",["Luisa"]],
+    ["impacto","Impacto",["Mariana","Carlos","Luisa","Mariana, vista por Luisa"]],["mensajes","Mensajes",["Mariana","Carlos","Luisa"]],
+    ["abrir","Abrir proyecto",["Luisa"]],["horas","Dedicación",["Mariana"]]];
+  var REGLAS = {
+    dia:["Primero lo vencido, después lo de hoy, después lo que frena a otro. El orden lo pone la base, no la persona.",
+      "Aquí están juntas las tareas de diseño y los pendientes de obra: una sola lista por persona.",
+      "Quien hace la tarea la mueve, pero no cambia su fecha ni su prioridad: eso es de quien la asignó.",
+      "Al abrir una tarea se lee para qué sirve. Ese texto sale de la plantilla de la fase; nadie lo escribe cada vez."],
+    revisar:["Solo aparece lo que pidió revisión, y nunca lo propio.",
+      "Aprobar termina la tarea en el mismo toque. Devolver exige escribir una observación.",
+      "El acuerdo son dos días hábiles. Lo que pasa de ahí se marca solo.",
+      "Revisa dirección, quien dirige el proyecto o la persona que dirección designe."],
+    impacto:["Ninguna frase cuenta tareas hechas ni horas trabajadas.",
+      "Solo cuentan las tareas que asignó otra persona, y la entrega es la hora en que se pidió la revisión.",
+      "Con menos de cinco tareas revisadas en cuatro semanas no se dice nada: con pocos datos una frase miente.",
+      "Cada frase se abre y muestra de qué tareas sale. Si un dato está mal, la persona lo señala y dirección lo resuelve.",
+      "Cada quien ve las suyas. Dirección ve las de todos, y la frase cambia de «entregaste» a «entregó»."],
+    mensajes:["Máximo dos al día por persona. Sale el más urgente y los demás van juntos en uno solo.",
+      "Solo en días hábiles, de 7:30 a 5. Quien marcó ausencia no recibe nada ese día.",
+      "Una tarea vencida avisa el primer día hábil, vuelve al tercero y al quinto sube a quien dirige.",
+      "Los mensajes de una persona los lee ella. Ni dirección ve los de otro.",
+      "Todavía no salen solos: falta programar el envío, que es la etapa 5."],
+    abrir:["Se escoge el tipo y el proyecto nace con sus fases, en orden y con las horas cotizadas en la venta.",
+      "Cada persona entra con un papel: dirige, produce o revisa. Sin papel no ve el proyecto ni recibe tareas.",
+      "Al abrir una fase, la base propone sus tareas típicas. Quien dirige las ajusta y las asigna de una vez.",
+      "El presupuesto es la última fase: de aquí pasa al módulo de obra con la misma nomenclatura."]
+  };
+  var ROL = {practicante:"Practicante",director_proyecto:"Director de proyecto",director:"Dirección",socio:"Socio",arquitecto:"Arquitecto",residente:"Residente"};
+  var TIPO = {tarea_devuelta:"Te devolvieron una tarea",alguien_espera:"Alguien espera por ti",tarea_vencida:"Tarea vencida",
+    revision_pendiente:"Hay algo para revisar",entrega_manana:"Se acerca una entrega",reconocimiento:"Reconocimiento",tu_semana:"Tu semana",
+    resumen:"Lo demás, junto",falta_registrar_dia:"Falta registrar el día"};
+  var MES = ["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"];
+  var st = {s:"tablero", q:"Luisa", abierto:null, nota:null};
+  function h(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
+  function fecha(iso){var p=iso.split("-");return (+p[2])+" de "+MES[p[1]-1]+" de "+p[0];}
+  function mayus(s){return s.charAt(0).toUpperCase()+s.slice(1);}
+  function nombre(s){return s.toLowerCase().replace(/(^|\s)(\S)/g,function(m,a,b){return a+b.toUpperCase();});}
+  var ORDEN=["Diseño","Peritaje","Consultoría","Obra","Montaje de interiores","Interno"];
+  function marca(p){return p!=="normal"?'<span class="dz-marca">'+(p==="alta"?"alta":"frena")+"</span>":"";}
+  function botones(a,b){return '<div class="dz-botones">'+a+b+"</div>";}
+
+  function tablero(){
+    var tarde=D.cola.filter(function(c){return c.fuera_de_plazo;})[0];
+    var out=tarde
+      ? '<div class="hero bad"><div class="hero-k lbl">Lo que más pesa hoy en el estudio</div><div class="hero-v">'+h(tarde.lectura.replace(/^.*espera hace /,"").replace(/;.*$/,""))+'</div><div class="hero-s">lleva «'+h(tarde.titulo)+'» esperando revisión. <strong>'+h(tarde.lectura)+".</strong></div></div>"
+      : '<div class="hero"><div class="hero-k lbl">Revisiones</div><div class="hero-v">Al día</div><div class="hero-s">Ninguna entrega lleva más de dos días hábiles esperando.</div></div>';
+    out+="<h2>La carga de cada persona</h2><div class=\"alerts\">"+D.carga.map(function(c){
+      var t=c.vencidas>0?["c","Vencido"]:c.abiertas>0?["o","Al día"]:["a","Libre"];
+      return '<div class="alert"><span class="atag '+t[0]+'">'+t[1]+'</span><span class="atxt"><b>'+h(c.nombre)+":</b> "+h(c.lectura)+(c.esperando_revision>0?" · "+c.esperando_revision+" en revisión":"")+'</span><span class="awho">'+h(ROL[c.rol]||c.rol)+"</span></div>";}).join("")+"</div>";
+    out+="<h2>Esperando revisión</h2><div class=\"alerts\">"+(D.cola.length?D.cola.map(function(c){
+      return '<div class="alert"><span class="atag '+(c.fuera_de_plazo?"c":"a")+'">'+(c.fuera_de_plazo?"Fuera de plazo":"En plazo")+'</span><span class="atxt"><b>'+h(c.titulo)+":</b> "+h(c.lectura)+'</span><span class="awho">Luisa</span></div>';}).join(""):'<div class="alert"><span class="atag o">Al día</span><span class="atxt">Nada espera revisión.</span><span class="awho"></span></div>')+"</div>";
+    return out;
+  }
+  function cuerpo(){
+    var q=st.q, out="", g="";
+    if(st.s==="dia"){
+      D.mi_dia[q].forEach(function(t){
+        if(t.grupo!==g){g=t.grupo;out+='<div class="dz-grupo '+(t.orden===1?"c":t.orden<=4?"a":"")+'">'+h(g)+"</div>";}
+        out+='<button class="dz-fila" data-tarea="'+t.id+'"><b>'+h(t.titulo)+marca(t.prioridad)+"</b><span>"+h(nombre(t.proyecto))+" · "+(t.orden===1?"<em>":"")+h(t.lectura)+(t.orden===1?"</em>":"")+"</span></button>";});
+      return out||'<p class="dz-tarjeta">Nada pendiente.</p>';
+    }
+    if(st.s==="revisar") return D.cola.map(function(c){
+      return '<div class="dz-tarjeta"><b style="font-family:var(--ui);font-weight:500">'+h(c.titulo)+marca(c.prioridad)+'</b><span style="display:block;color:var(--tinta-3);font-size:.82rem">'+(c.fuera_de_plazo?'<em style="font-style:normal;color:var(--critico)">':"")+h(c.lectura)+(c.fuera_de_plazo?"</em>":"")+"</span>"+
+        botones('<button class="btn" data-nota="En la aplicación, este toque aprueba y la tarea queda terminada.">Aprobar</button>','<button class="btn ghost" data-nota="En la aplicación, aquí se escribe la observación. Sin ella no se puede devolver.">Devolver</button>')+"</div>";}).join("");
+    if(st.s==="impacto"){
+      var lista=D.indicadores[q==="Mariana, vista por Luisa"?"Mariana_vista_por_Luisa":q];
+      return lista.map(function(i){
+        var abre=(q==="Mariana"&&D.detalle[i.indicador]&&D.detalle[i.indicador].length)||(q==="Luisa"&&i.indicador==="revisiones");
+        return "<"+(abre?"button":"div")+' class="dz-tarjeta"'+(abre?' data-ind="'+i.indicador+'"':"")+'><span class="fld-k">'+h(i.titulo)+'</span><p class="dz-frase">'+h(i.frase)+"</p></"+(abre?"button":"div")+">";}).join("");
+    }
+    if(st.s==="mensajes"){
+      var m=D.mensajes[q];
+      return '<div class="dz-grupo">'+h(fecha(D.dia_mensajes))+" · 10:00 a. m.</div>"+(m.length?m.map(function(x){return '<div class="dz-globo"><small>'+h(TIPO[x.tipo]||x.tipo)+"</small>"+h(x.texto)+"</div>";}).join(""):'<p class="dz-tarjeta">Hoy no le llega nada.</p>');
+    }
+    var p=D.proyecto;
+    return '<div class="dz-grupo">Tipo de proyecto</div>'+D.plantillas.slice().sort(function(a,b){return ORDEN.indexOf(a.nombre)-ORDEN.indexOf(b.nombre);}).map(function(x){return '<div class="dz-fila"><b>'+h(x.nombre)+"</b><span>"+(x.fases.length?h(x.fases.join(" → ")):"Sin fases")+"</span></div>";}).join("")+
+      '<div class="dz-grupo">'+h(p.nombre)+" · así nació</div>"+p.fases.map(function(f){return '<div class="dz-fila"><b>'+h(mayus(f.fase))+'<span class="dz-horas">'+f.horas+" h</span></b><span>"+h(f.entrega_cliente||"")+(f.exige_aprobacion_cliente?" · no cierra sin el cliente":"")+"</span></div>";}).join("")+
+      '<div class="dz-grupo">Equipo</div>'+p.equipo.map(function(e){return '<div class="dz-fila"><b>'+h(e.nombre)+"</b><span>"+h(e.papel)+" · "+h(e.profesion||"")+"</span></div>";}).join("")+
+      '<div class="dz-grupo">Lo que propone el anteproyecto</div>'+D.propuesta.map(function(t){return '<div class="dz-fila"><b>'+h(t.titulo)+marca(t.prioridad)+"</b><span>"+h(t.proposito)+"</span></div>";}).join("");
+  }
+  function cajon(){
+    if(!st.abierto) return "";
+    if(st.abierto.t){
+      var t=D.mi_dia[st.q].filter(function(x){return x.id===st.abierto.t;})[0];
+      var rastro=t.titulo===D.rastro_titulo?'<div class="dz-grupo">Rastro</div><ul class="dz-rastro">'+D.rastro.map(function(r){return "<li><strong>"+h(r.quien)+"</strong> · "+(r.tipo==="creada"?"la asignó":h((r.de||"").replace(/_/g," ")+" → "+(r.a||"").replace(/_/g," ")))+" · "+h(r.cuando)+"</li>";}).join("")+"</ul>":"";
+      return '<div class="dz-velo" data-cierra><div class="dz-cajon"><span class="fld-k">'+h(nombre(t.proyecto))+"</span><h3>"+h(t.titulo)+'</h3><p style="color:var(--tinta-3)">'+h(t.lectura)+'</p><div class="dz-grupo">Para qué sirve</div><p>'+h(D.contexto[t.id]||t.para_que||"")+"</p>"+rastro+
+        (t.orden===6?"":botones('<button class="btn ghost" data-nota="En la aplicación, este toque la pasa a «en curso» y guarda la hora.">Empezar</button>','<button class="btn" data-nota="En la aplicación, este toque pide la revisión. La hora la pone el sistema y es la que cuenta como entrega.">Pedir revisión</button>'))+"</div></div>";
+    }
+    var filas=st.abierto.i==="revisiones"?D.detalle_luisa:D.detalle[st.abierto.i];
+    var ind=D.indicadores[st.q].filter(function(x){return x.indicador===st.abierto.i;})[0];
+    return '<div class="dz-velo" data-cierra><div class="dz-cajon"><span class="fld-k">'+h(ind.titulo)+"</span><h3>"+h(ind.frase)+'</h3><div class="dz-grupo">De dónde sale</div>'+filas.map(function(f){return '<div class="dz-fila"><b>'+h(f.titulo)+"</b><span>"+(f.a_favor?"<i>":"<em>")+h(f.hecho)+(f.a_favor?"</i>":"</em>")+"</span></div>";}).join("")+
+      (st.q==="Mariana"?botones("",'<button class="btn ghost" data-nota="En la aplicación, aquí la persona señala el dato y escribe por qué. Lo resuelve dirección y queda el rastro.">Este dato está mal</button>'):"")+"</div></div>";
+  }
+  function pinta(){
+    var def=SECC.filter(function(x){return x[0]===st.s;})[0];
+    document.getElementById("dz-produccion").hidden=st.s!=="tablero";
+    document.getElementById("dz-dedicacion").hidden=st.s!=="horas";
+    var dz=document.getElementById("dz");
+    if(st.s==="tablero"){dz.innerHTML=tablero();}
+    else if(st.s==="horas"){dz.innerHTML="";}
+    else{
+      var sesion=st.q.indexOf("vista por")>0?"Luisa":st.q;
+      dz.innerHTML='<div class="dz-mesa"><div><div class="dz-phone"><div class="phone-top"><span class="lbl">'+h(def[1])+'</span><span class="lbl">'+h(sesion)+"</span></div>"+
+        (def[2].length>1?'<div class="dz-quien">'+def[2].map(function(n){return '<button class="pill" aria-pressed="'+(n===st.q)+'" data-q="'+h(n)+'">'+h(n)+"</button>";}).join("")+"</div>":"")+
+        '<div class="dz-body">'+cuerpo()+"</div>"+cajon()+(st.nota?'<div class="dz-nota" role="status">'+h(st.nota)+"</div>":"")+'</div><div class="phone-cap" style="width:auto">'+(st.s==="dia"?h(fecha(D.hoy)):"Así se ve en el celular")+"</div></div>"+
+        '<div><h2 style="margin-top:0">La regla que hay detrás</h2><ul class="dz-reglas">'+REGLAS[st.s].map(function(x){return "<li>"+h(x)+"</li>";}).join("")+"</ul></div></div>";
+    }
+    document.getElementById("dz-ej").textContent="Las personas llevan los nombres del equipo, pero Las Margaritas, sus tareas y sus fechas son un ejemplo armado el "+fecha(D.hoy)+" en una base de prueba. La tabla de proyectos en producción es de agosto de 2026. Las reglas sí son las reales: ya están aplicadas en la base.";
+  }
+  document.getElementById("v-diseno").addEventListener("click",function(e){
+    var b=e.target.closest("[data-s],[data-q],[data-tarea],[data-ind],[data-nota],[data-cierra]");
+    if(!b){ if(st.nota){st.nota=null;pinta();} return; }
+    st.nota=null;
+    if(b.dataset.s){st.s=b.dataset.s;st.q=SECC.filter(function(x){return x[0]===st.s;})[0][2][0];st.abierto=null;}
+    else if(b.dataset.q){st.q=b.dataset.q;st.abierto=null;}
+    else if(b.dataset.tarea){st.abierto={t:b.dataset.tarea};}
+    else if(b.dataset.ind){st.abierto={i:b.dataset.ind};}
+    else if(b.dataset.nota){st.nota=b.dataset.nota;}
+    else if(b.hasAttribute("data-cierra")){ if(e.target!==b) return; st.abierto=null; }
+    pinta();
+  });
+  document.addEventListener("keydown",function(e){if(e.key==="Escape"&&st.abierto){st.abierto=null;pinta();}});
+  /* Los espacios del módulo se escogen en el menú lateral. */
+  window.sici=window.sici||{};
+  window.sici.diseno=function(s){st.s=s;st.q=SECC.filter(function(x){return x[0]===s;})[0][2][0];st.abierto=null;st.nota=null;pinta();};
+  pinta();
+})();

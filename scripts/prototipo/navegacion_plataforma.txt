@@ -1,0 +1,63 @@
+===CSS===
+/* ---------- navegación en cascada: cada módulo despliega sus espacios ---------- */
+/* El menú lateral mide lo que pide el nombre más largo, «Arquitectura y diseño», en una sola línea. */
+:root{--nav-w:264px;}
+.navsub{display:flex;flex-direction:column;padding:2px 0 10px;}
+.navsubitem{display:block;width:100%;text-align:left;background:none;border:0;padding:6px 26px 6px 65px;min-height:32px;font-family:var(--ui);font-size:.82rem;font-weight:400;color:var(--taupe);cursor:pointer;letter-spacing:.005em;}
+.navsubitem:hover{color:var(--tinta);}
+.navsubitem[aria-current="true"]{color:var(--tinta);font-weight:500;}
+@media (max-width:860px){
+  .navsub{order:99;flex-basis:100%;flex-direction:row;overflow-x:auto;padding:6px 4px 2px;margin-top:8px;border-top:1px solid var(--linea-2);scrollbar-width:none;}
+  .navsubitem{width:auto;flex:none;white-space:nowrap;padding:0 12px;min-height:44px;border-bottom:2px solid transparent;}
+  .navsubitem[aria-current="true"]{border-bottom-color:var(--tinta);}
+}
+===JS===
+(function(){
+  /* Cada módulo y los espacios que tiene dentro. El tercer dato de un espacio
+     es el título de la página al que baja (-1: el comienzo). */
+  var MODS=[
+    {id:"inicio",k:"00",n:"Inicio",g:"Dirección",esp:[["pesa","Lo que más pesa hoy",-1],["alertas","Alertas abiertas",0],["obras","Las cuatro obras",1]]},
+    {id:"obra",k:"01",n:"Obra",g:"Operación",pill:3,esp:[["tablero","Tablero de obras"],["resumen","Resumen de la obra"],["gastos","Gastos y facturas"],["caja","Flujo de caja"],["docs","Documentos"],["sitio","Registro en sitio"]]},
+    {id:"diseno",k:"02",n:"Arquitectura y diseño",g:"Operación",pill:/*PEND_DISENO*/,esp:[["tablero","Tablero"],["dia","Mi día"],["revisar","Revisar"],["impacto","Impacto"],["mensajes","Mensajes"],["abrir","Abrir proyecto"],["horas","Dedicación"]]},
+    {id:"ventas",k:"03",n:"Ventas",g:"Comercial",esp:[["embudo","Embudo del mes",0],["ficha","Ficha de calificación",1]]},
+    {id:"mercadeo",k:"04",n:"Mercadeo",g:"Comercial",esp:[["conclusion","La conclusión del mes",-1],["canales","Los dos canales",0],["semana","Lo que hay que hacer",1]]},
+    {id:"caja",k:"05",n:"Caja y cartera",g:"Financiero",pill:1,esp:[["semanas","Proyección a 13 semanas",-1],["dueno","Quién recibe la alerta",0],["cartera","Cartera",1]]}];
+  var st={m:"inicio",e:"pesa"};
+  var lista=document.getElementById("navlist");
+  window.sici=window.sici||{};
+  function mod(id){return MODS.filter(function(x){return x.id===id;})[0];}
+  function pintaNav(){
+    var out="",g="";
+    MODS.forEach(function(m){
+      var on=m.id===st.m;
+      if(m.g!==g){g=m.g;out+='<div class="navgrp lbl">'+g+"</div>";}
+      out+='<button class="navitem" data-m="'+m.id+'" aria-current="'+on+'" aria-expanded="'+on+'"><span class="k">'+m.k+"</span>"+m.n+(m.pill?'<span class="navpill">'+m.pill+"</span>":"")+"</button>";
+      if(on) out+='<div class="navsub">'+m.esp.map(function(e){return '<button class="navsubitem" data-m="'+m.id+'" data-e="'+e[0]+'" aria-current="'+(e[0]===st.e)+'">'+e[1]+"</button>";}).join("")+"</div>";
+    });
+    lista.innerHTML=out;
+    var m=mod(st.m), e=m.esp.filter(function(x){return x[0]===st.e;})[0];
+    document.getElementById("crumb").innerHTML=m.g+" · "+m.n+" · <b>"+e[1]+"</b>";
+  }
+  function ir(m,e){
+    var M=mod(m);
+    e=e||M.esp[0][0];
+    st.m=m; st.e=e;
+    var vista=(m==="obra"&&e==="sitio")?"captura":m;
+    document.querySelectorAll(".view").forEach(function(s){s.classList.toggle("on",s.id==="v-"+vista);});
+    if(m==="obra"&&e!=="sitio"&&window.sici.obra) window.sici.obra(e);
+    if(m==="diseno"&&window.sici.diseno) window.sici.diseno(e);
+    pintaNav();
+    var E=M.esp.filter(function(x){return x[0]===e;})[0], destino=null;
+    if(E.length>2&&E[2]>=0) destino=document.querySelectorAll("#v-"+vista+" > h2")[E[2]];
+    if(destino) destino.scrollIntoView({block:"start"});
+    else if(window.matchMedia("(max-width:860px)").matches&&e!==M.esp[0][0]) document.querySelector(".main").scrollIntoView({block:"start"});
+    else window.scrollTo(0,0);
+  }
+  /* Los módulos avisan cuando cambian de espacio por dentro (tocar una obra en el tablero). */
+  window.sici.marca=function(m,e){st.m=m;st.e=e;pintaNav();};
+  lista.addEventListener("click",function(ev){
+    var b=ev.target.closest("[data-m]");
+    if(b) ir(b.dataset.m,b.dataset.e);
+  });
+  ir("inicio");
+})();

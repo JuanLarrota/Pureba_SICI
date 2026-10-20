@@ -1,0 +1,5 @@
+# Los archivos de texto se guardan con saltos LF, también en Windows.
+* text=auto eol=lf
+*.png binary
+*.webp binary
+*.ico binary

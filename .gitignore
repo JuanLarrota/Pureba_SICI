@@ -1,0 +1,55 @@
+# --- Python (pruebas de la base, ETL, scripts)
+.venv/
+venv/
+__pycache__/
+*.pyc
+
+# --- Node y Next.js (la aplicación)
+/node_modules
+/.next/
+/out/
+/coverage
+*.tsbuildinfo
+next-env.d.ts
+npm-debug.log*
+
+# --- Entorno. Ninguna variable es secreta, pero cada máquina pone las suyas; el ejemplo sí va.
+.env*
+!.env.example
+
+# --- Sistema
+.DS_Store
+
+# --- Supabase local
+supabase/semilla/_*.tmp
+supabase/.temp/
+supabase/.branches/
+
+# Datos reales de ESA: 2.980 pagos con el nombre de cada tercero, y el
+# presupuesto de Nirvana. Se quedan en el computador y se cargan directo a
+# Supabase; no viajan a GitHub. La prueba los necesita en disco para correr.
+supabase/semilla/010_historico.sql
+supabase/semilla/020_nirvana.sql
+supabase/semilla/025_nirvana_balance.sql
+supabase/semilla/060_tareas_hoja_luisa.sql
+
+# La versión del 13 de septiembre trae una copia de esos mismos datos, y con
+# Git ya no hace falta guardar versiones viejas en carpetas.
+_version_anterior/
+
+# La demo con datos de ejemplo: se arma con scripts/demo/armar.py --web y no se sube.
+/public/demo/datos.json
+legado/app/_prueba.html
+legado/app/_supabase_falso.js
+legado/app/_datos.json
+
+# Lo que dejan los recorridos de Playwright
+/e2e/salida/
+/e2e/capturas/
+
+# La memoria completa del traspaso (cifras, clientes, hallazgos): se queda en el computador.
+docs/contexto/privado/
+
+# Cifras reales y hoja de seguimiento de Luisa: no viajan a GitHub.
+supabase/semilla/_resumen.txt
+docs/contexto/referencias-visuales/*.xlsx

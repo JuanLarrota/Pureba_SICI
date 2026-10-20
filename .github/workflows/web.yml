@@ -1,0 +1,23 @@
+# Cada push revisa la aplicación: tipos, estilo, pruebas y que el sitio estático se arme.
+# No despliega: eso lo hace Cloudflare Pages al ver el push, con su propia conexión al repositorio.
+name: web
+
+on:
+  push:
+    paths-ignore: ["docs/**", "legado/**", "scripts/etl/**"]
+  pull_request:
+
+jobs:
+  verificar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm run lint
+      - run: npm test
+      - run: npm run build

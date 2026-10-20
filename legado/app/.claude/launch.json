@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "sici-app",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": ["/Users/felipecuartas/Documents/sistema integrado de control interno/sici/herramientas/servir_app.py"],
+      "port": 3000
+    }
+  ]
+}
